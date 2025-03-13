@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sai Thribhuvan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            position: relative;
+        }
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: left;
+            z-index: -1;
+        }
+        header {
+            background-color: rgba(0, 123, 255, 0.9);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            padding-left: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 3px solid white;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(0, 86, 179, 0.9);
+        }
+        nav a {
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        nav a:hover {
+            background: #003d80;
+        }
+        section {
+            padding: 50px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            margin: 20px auto;
+            border-radius: 10px;
+            max-width: 1100px;
+        }
+        .about-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .about-text {
+            width: 60%;
+        }
+        .about-image {
+            width: 35%;
+            max-width: 300px;
+        }
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #007bff;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .chatbot-section {
+            text-align: center;
+            background-color: #e6f7ff;
+            padding: 50px 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+        .chatbot-button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+        .chatbot-button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 123, 255, 0.9);
+            color: white;
+            margin-top: 30px;
+        }
+        .contact-links a {
+             color: blue !important; /* Ensures email link is always blue */
+             font-weight: 500;
+             text-decoration: underline; /* Makes it clear as a link */
+        }
+
+.contact-links a:hover {
+    color: darkblue; /* Slightly darker blue on hover */
+    text-decoration: none;
+}
+
+    </style>
+</head>
+<body>
+
+<img src="/static/logo.png" alt="Background Image" class="background-image">
+
+<header>
+    <img src="/static/profile.jpeg" alt="Your Profile Picture" class="profile-pic">
+    <div>
+        <h1>Thribhuvan</h1>
+        <p>Software Developer | AI & ML Enthusiast |</p>
+    </div>
+</header>
+
+<nav>
+    <a href="#about">About</a>
+    <a href="#theme">Theme</a>
+    <a href="#projects">Projects</a>
+    <a href="#chatbot">Chatbot</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section id="about" class="container">
+    <div class="about-container">
+        <div class="about-text">
+            <h2>About Me</h2>
+            <p>Hello! I'm Thribhuvan, a passionate software developer with a focus on AI, Machine Learning. The platform will provide services that enable users to collect data as input for the development of upcoming software intelligence. This data will be beneficial in obtaining relevant information about the given prompt. Users will receive their research papers and near-relevant information about the prompt. These services will continue until the project is completed. Once the software is launched, users will be applied to the core concept of the software and will have the opportunity to experience its uses.</p>
+        </div>
+        <div class="about-image">
+            <img src="/static/me.jpeg" alt="Your Profile Picture">
+        </div>
+    </div>
+</section>
+
+<section id="theme" class="container">
+    <h2>The Theme of Making Chatbot</h2>
+    <p>The chatbot is designed to assist users by leveraging AI-powered natural language processing capabilities. It aims to provide accurate responses, assist in research, and offer real-time solutions based on user input. Built using Flask and Google Gemini API, it integrates machine learning techniques to enhance user interactions.Allow the bot to illuminate your aspiration and facilitate their relization
+        This chatbot provides valuable assistance to users.
+        You can interact with it as if it were a friend, sharing your ideas naturally.
+        It allows you to discuss specific concept ideas in your own communication style.
+        The chatbot helps break down your thought process for better understanding.
+        It analyzes different ways of thinking across individuals.
+       This analysis can be used to train and improve AI models.. </p>
+</section>
+
+<section id="" class="container">
+
+    
+
+<section id="chatbot" class="chatbot-section">
+    <h2>AI Chatbot - IRCI Chat</h2>
+
+    <p>Explore my chatbot project. Kindly share your current innovative thought patterns, and I will assist you in facilitating their dissemination.</p>
+    <script>
+        document.getElementById('generate-image-button').addEventListener('click', function() {
+            const prompt = document.getElementById('image-prompt').value;
+            fetch('/generate-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image_url) {
+                    document.getElementById('generated-image-container').innerHTML = `<img src="${data.image_url}" alt="Generated Image">`;
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+    <a href="main.html" class="chatbot-button" target="_blank">Try the AI Chatbot</a>
+</section>
+
+ <!-- Contact Section -->
+ <section id="contact" class="container">
+    <h2>Contact Me</h2>
+    <p>Feel free to reach out for collaboration!</p>
+    <div class="contact-links">
+        <p>Email me at: <a href="mailto:glowwcollab9@gmail.com">glowwcollab9@gmail.com</a></p>
+        <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://github.com/your-github" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 [Thribhuvan]. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
