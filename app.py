@@ -3,12 +3,17 @@ from flask_cors import CORS
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+import sqlite3
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 # Load API key securely
 api_key = os.getenv("GOOGLE_GENAI_API_KEY")
@@ -27,22 +32,58 @@ generation_config = {
 }
 
 # Initialize the Generative AI model
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    generation_config=generation_config,
-)
+try:
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config,
+    )
+except Exception as e:
+    raise RuntimeError(f"Failed to initialize the Generative AI model: {str(e)}")
 
-# Initial conversation context (can be modified)
-initial_context = ""
+# Connect to SQLite database and create table if it doesn't exist
+def initialize_db():
+    conn = sqlite3.connect('chatbot.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS chat_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_input TEXT NOT NULL,
+            bot_response TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
+# Function to insert chat data into the database
+def save_chat_to_db(user_input, bot_response):
+    conn = sqlite3.connect('chatbot.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO chat_history (user_input, bot_response)
+        VALUES (?, ?)
+    ''', (user_input, bot_response))
+    conn.commit()
+    conn.close()
+    logging.info(f"Stored in database - User Input: {user_input}, Bot Response: {bot_response}")
+
+# Function to fetch chat history from the database
+def fetch_chat_history():
+    conn = sqlite3.connect('chatbot.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM chat_history ORDER BY timestamp DESC')
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+# Function to generate a response using the AI model
 def generate_response(user_message):
     try:
-        combined_message = f"{initial_context}\nUser: {user_message}\n{BOT_NAME}:" if initial_context else f"User: {user_message}\n{BOT_NAME}:"
-        
+        combined_message = f"User: {user_message}\n{BOT_NAME}:"
         result = model.generate_content([combined_message])
         
         if hasattr(result, "text"):
-            return result.text.strip()  # Correct extraction of response
+            return result.text.strip()
         else:
             return "No response from the model."
     except Exception as e:
@@ -66,10 +107,37 @@ def chat():
 
         # Generate bot response
         bot_response = generate_response(user_message)
+
+        # Save chat data to the database
+        save_chat_to_db(user_message, bot_response)
+
         return jsonify({'response': bot_response}), 200
 
     except Exception as e:
         return jsonify({'error': f"Internal Server Error: {str(e)}"}), 500
 
+# Route to fetch chat history
+@app.route('/chat/history', methods=['GET'])
+def get_chat_history():
+    try:
+        rows = fetch_chat_history()
+
+        # Format the data for JSON response
+        chat_history = []
+        for row in rows:
+            chat_history.append({
+                'id': row[0],
+                'user_input': row[1],
+                'bot_response': row[2],
+                'timestamp': row[3]
+            })
+
+        return jsonify({'chat_history': chat_history}), 200
+    except Exception as e:
+        return jsonify({'error': f"Internal Server Error: {str(e)}"}), 500
+
+# Initialize the database when the app starts
+initialize_db()
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)  # Allows external access if needed
+    app.run(host='0.0.0.0', port=5000, debug=True)
